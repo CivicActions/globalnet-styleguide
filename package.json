@@ -1,0 +1,28 @@
+{
+  "name": "gnet-pattern-lab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "patternlab": "patternlab",
+    "build": "patternlab build --config ./patternlab-config.json",
+    "build:uikit": "npm run build --prefix node_modules/@pattern-lab/uikit-workshop -- --patternlabrc $INIT_CWD/.patternlabrc.js",
+    "help": "patternlab --help",
+    "install": "patternlab install --config ./patternlab-config.json",
+    "serve": "patternlab serve --config ./patternlab-config.json",
+    "start": "npm run serve",
+    "version": "patternlab --version"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@pattern-lab/cli": "^1.0.1"
+  },
+  "dependencies": {
+    "@pattern-lab/cli": "^1.0.1",
+    "@pattern-lab/core": "^3.0.3",
+    "@pattern-lab/engine-mustache": "^2.0.1-alpha.0",
+    "@pattern-lab/engine-twig-php": "^3.0.3",
+    "@pattern-lab/uikit-workshop": "^1.0.4"
+  }
+}
