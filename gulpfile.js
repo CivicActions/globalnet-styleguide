@@ -1,7 +1,7 @@
 /* -------------------------------
  Available Tasks
  ------------------------------- */
-// **gulp                     -- Lints js & sass, watches sass, starts up and watches the PL server.
+// gulp                     -- Lints js & sass. Compiles sass. Minifies and cleans up JS files.
 // gulp build               -- Task for frontend:build. Lints JS & Sass, compiles sass & generates patternlab.
 // gulp sass                -- Compiles Sass Files.
 // gulp sass-for-build      -- Compiles sass files & minifies the resulting CSS
