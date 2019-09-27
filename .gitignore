@@ -2,3 +2,4 @@
 /.DS_Store
 /source/css/styles.css
 public/*
+/dependencyGraph.json
