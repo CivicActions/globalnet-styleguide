@@ -16,13 +16,30 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@pattern-lab/cli": "^1.0.1"
+    "@pattern-lab/cli": "^1.0.1",
+    "eslint-config-prettier": "^6.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "gulp-autoprefixer": "^7.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "^6.0.0",
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-load-plugins": "^2.0.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sass-glob": "^1.1.0",
+    "gulp-sass-lint": "^1.4.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "postcss-clean": "^1.1.0",
+    "prettier": "^1.18.2"
   },
   "dependencies": {
     "@pattern-lab/cli": "^1.0.1",
     "@pattern-lab/core": "^3.0.3",
     "@pattern-lab/engine-mustache": "^2.0.1-alpha.0",
     "@pattern-lab/engine-twig-php": "^3.0.3",
-    "@pattern-lab/uikit-workshop": "^1.0.4"
+    "@pattern-lab/uikit-workshop": "^1.0.4",
+    "gulp": "^4.0.2"
   }
 }
