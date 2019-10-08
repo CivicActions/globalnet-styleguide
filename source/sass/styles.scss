@@ -1,0 +1,7 @@
+// Import mixins and variables first
+@import 'base/variables';
+@import 'base/functions';
+@import 'base/mixins/**/*.scss';
+
+// Import patternlab partials
+@import '../_patterns/**/*.scss';

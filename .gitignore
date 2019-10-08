@@ -1,5 +1,5 @@
 /node_modules
 /.DS_Store
 /source/css/styles.css
-public/*
+/public
 /dependencyGraph.json
