@@ -22,8 +22,8 @@ directory to the repo.
 1. Click the `name, image, or icon` of your user to create your fork of the project.
 1. Enter `cd ~/workspace/living-styleguide` (or the location of the repo on your local sandbox) in your terminal to change your work
 directory to the repo.
-1. Enter `git remote add myfork ssh://git@github.com:GITHUB_USERNAME/globalnet-styleguide.git` to add your fork as a
-remote. *Replace `GITHUB_USERNAME` with your Github username.*
+1. Enter `git remote add myfork git@github.com:GITHUB_USERNAME/globalnet-styleguide.git` to add your fork as a
+remote.
 
 ### Configure Upstream
 
