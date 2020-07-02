@@ -1,69 +1,112 @@
-/* -------------------------------
- Available Tasks
- ------------------------------- */
-// gulp                     -- Lints js & sass. Compiles sass. Minifies and cleans up JS files.
-// gulp build               -- Task for frontend:build. Lints JS & Sass, compiles sass & generates patternlab.
-// gulp sass                -- Compiles Sass Files.
-// gulp sass-for-build      -- Compiles sass files & minifies the resulting CSS
-// gulp sass-lint           -- Lints Sass Files.
-// gulp js-lint             -- Lints JS files.
-// gulp js-optimize         -- Minifies JS files
-// gulp watch               -- Lints & Watches sass changes .
-//
+/*
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+========================================
+========================================
+========================================
+----------------------------------------
+USWDS SASS GULPFILE
+----------------------------------------
+*/
+const autoprefixer = require("autoprefixer");
+const csso = require("postcss-csso");
+const gulp = require("gulp");
+const pkg = require("./node_modules/uswds/package.json");
+const postcss = require("gulp-postcss");
+const replace = require("gulp-replace");
+const sass = require("gulp-sass");
+const sourcemaps = require("gulp-sourcemaps");
+const uswds = require("./node_modules/uswds-gulp/config/uswds");
+sass.compiler = require("sass");
+/*
+----------------------------------------
+PATHS
+----------------------------------------
+- All paths are relative to the
+  project root
+- Don't use a trailing `/` for path
+  names
+----------------------------------------
+*/
+// Project Sass source directory
+const PROJECT_SASS_SRC = './source/sass';
+// Images destination
+const IMG_DEST = './source/images';
+// Fonts destination
+const FONTS_DEST = './source/fonts';
+// Javascript destination
+const JS_DEST = './source/js';
+// Compiled CSS destination
+const CSS_DEST = './source/css';
+// Site CSS destination
+// Like the _site/assets/css directory in Jekyll, if necessary.
+// If using, uncomment line 112
+// const SITE_CSS_DEST = './path/to/site/css/destination';
+/*
 
-var gulp = require('gulp');
-
-// == PLUGINS ====
-/** This uses the gulp load plugin npm library to avoid having to declare
- * each plugin you use with "var plugin = require('gulp-plugin`)".
- * It also lazy-loads plugins depending on what is being used by the task being run.
- * NPM: https://www.npmjs.com/package/gulp-load-plugins
- * Learn more: https://andy-carter.com/blog/automatically-load-gulp-plugins-with-gulp-load-plugins 
- */
-
-var plugins = require('gulp-load-plugins')({
-  pattern: ['*', 'gulp-*', '@*/gulp{-,.}*'],
-  rename: {
-    'gulp-autoprefixer'            : 'prefix', // Adds browser prefixes where needed
-    'gulp-group-css-media-queries' : 'gcmq',   // This will group media queries together in compiled CSS.
-    'gulp-sass-glob'               : 'sassglob', // Allows you to compile all sass partials under a given directory
-    'gulp-eslint'                  : 'eslint', // Lints JS syntax
-    'postcss-clean'                : 'clean', // Minifies & cleans up CSS
-    'gulp-sourcemaps'              : 'sourcemaps'
-  }
+----------------------------------------
+TASKS
+----------------------------------------
+*/
+gulp.task("copy-uswds-setup", () => {
+    return gulp
+        .src(`${uswds}/scss/theme/**/**`)
+        .pipe(gulp.dest(`${PROJECT_SASS_SRC}`));
 });
-
-// == DIRECTORIES ==
-var sassFiles       = 'source/sass/**/*.scss'; // replace this with the path to your sass directory.
-var patternLabFiles = 'source/_patterns/**/*.scss'; // Replace with top level PL directory if any
-var cssDir          = 'source/css'; // Replace with path to CSS dir
-var optimizedJSDir  = 'source/js'; // Directory for minified JS files
-var jsDir           = 'source/js/src/*.js'; // Source directory for JS
-
-'use strict';
-var options = {
-
-  //-------- SASS ---------------
-  sass: {
-    sassFiles: sassFiles,
-    plFiles:   patternLabFiles
-  },
-
-  //--------- CSS ---------------
-  css: {
-    cssFiles: cssDir
-  },
-
-  //--------- JS ---------------
-  js: {
-    jsFiles: jsDir,
-    optimizedDir: optimizedJSDir
-  }
-};
-// Tasks
-require('./gulp-tasks/sass')(gulp, options, plugins);
-require('./gulp-tasks/sass-lint')(gulp, options, plugins);
-require('./gulp-tasks/js-lint')(gulp, options, plugins);
-require('./gulp-tasks/js-optimize')(gulp, options, plugins);
-require('./gulp-tasks/watch')(gulp, options, plugins);
-require('./gulp-tasks/default')(gulp, options, plugins);
+gulp.task("copy-uswds-fonts", () => {
+    return gulp.src(`${uswds}/fonts/**/**`).pipe(gulp.dest(`${FONTS_DEST}`));
+});
+gulp.task("copy-uswds-images", () => {
+    return gulp.src(`${uswds}/img/**/**`).pipe(gulp.dest(`${IMG_DEST}`));
+});
+gulp.task("copy-uswds-js", () => {
+    return gulp.src(`${uswds}/js/**/**`).pipe(gulp.dest(`${JS_DEST}`));
+});
+gulp.task("build-sass", function(done) {
+    var plugins = [
+        // Autoprefix
+        autoprefixer({
+            cascade: false,
+            grid: true
+        }),
+        // Minify
+        csso({ forceMediaMerge: false }),
+    ];
+    return (
+        gulp
+            .src([`${PROJECT_SASS_SRC}/*.scss`])
+            .pipe(sourcemaps.init({ largeFile: true }))
+            .pipe(
+                sass.sync({
+                    includePaths: [
+                        `${PROJECT_SASS_SRC}`,
+                        `${uswds}/scss`,
+                        `${uswds}/scss/packages`
+                    ]
+                })
+            )
+            .pipe(replace(/\buswds @version\b/g, "based on uswds v" + pkg.version))
+            .pipe(postcss(plugins))
+            .pipe(sourcemaps.write("."))
+            // uncomment the next line if necessary for Jekyll to build properly
+            //.pipe(gulp.dest(`${SITE_CSS_DEST}`))
+            .pipe(gulp.dest(`${CSS_DEST}`))
+    );
+});
+gulp.task(
+    "init",
+    gulp.series(
+        "copy-uswds-setup",
+        "copy-uswds-fonts",
+        "copy-uswds-images",
+        "copy-uswds-js",
+        "build-sass"
+    )
+);
+gulp.task("watch-sass", function() {
+    gulp.watch(`${PROJECT_SASS_SRC}/**/*.scss`, gulp.series("build-sass"));
+});
+gulp.task("watch", gulp.series("build-sass", "watch-sass"));
+gulp.task("default", gulp.series("watch"));
